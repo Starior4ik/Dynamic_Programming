@@ -1,0 +1,52 @@
+#include <iostream>
+
+struct item{
+    unsigned int w = 0;
+    unsigned int p = 0;
+};
+
+const int W = 13;
+const int k = 5;
+item items[k];
+
+void find_answ(unsigned int A[k+1][W+1], int w, int k) {
+    if (A[k][w] == 0) {
+        return;
+    }
+    if (A[k][w] == A[k-1][w]) {
+        find_answ(A,w,k-1);
+    } else {
+        std::cout << k << " ";
+        find_answ(A, w - items[k-1].w, k-1);
+    }
+}
+
+int main() {
+    
+    items[0] = {.w = 3, .p = 1};
+    items[1] = {.w = 4, .p = 6};
+    items[2] = {.w = 5, .p = 4};
+    items[3] = {.w = 8, .p = 7};
+    items[4] = {.w = 9, .p = 6};
+
+    unsigned int A[k+1][W + 1] {0};
+
+    for(int i = 1; i <= k; i++) {
+        for (int j = 1; j <= W; j++) {
+            if (j < items[i-1].w) {
+                A[i][j] = A[i-1][j];
+            } else {
+                A[i][j] = std::max(A[i-1][j], A[i-1][j - items[i-1].w] + items[i-1].p);
+            }
+        }
+    }
+
+    for(int i = 0; i <= k; i++) {
+        for (int j = 1; j <= W; j++) {
+            std::cout << A[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    find_answ(A,W,k);
+}
